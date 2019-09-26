@@ -64,10 +64,10 @@ public class ShowCost extends AppCompatActivity {
                     TransInfo info = postSnapshot.getValue(TransInfo.class);
                     totalCost+=info.getAmount();
                     transList.add(info);
-                    costInfoTV.append("OK");
+                    //costInfoTV.append("OK");
                 }
                 transListAdapter.setData(transList);
-                costInfoTV.append("DONE");
+                costInfoTV.setText("Total Cost: "+totalCost);
                 //dueRef.setValue(totalCost);
                 //dueTextView.setText("মোট বাকিঃ "+totalCost+" টাকা" );
             }
