@@ -1,5 +1,6 @@
 package com.farhanshahoriar.costmanagement;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,8 +11,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +25,7 @@ public class CostInput extends AppCompatActivity {
     Context mContext;
     FirebaseDatabase database;
     DatabaseReference groupRef;
+    DatabaseReference userCostRef;
 
     private String username;
     private String groupID;
@@ -28,7 +33,7 @@ public class CostInput extends AppCompatActivity {
     private TextView userInfoTV;
     private EditText costInfoET;
     private EditText costamountET;
-
+    private Integer thisUesrCost=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,7 @@ public class CostInput extends AppCompatActivity {
         sharedPref = mContext.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
         username = sharedPref.getString("username", "false");
         groupID = sharedPref.getString("groupID", "false");
+        thisUesrCost = sharedPref.getInt("ucost",0);
 
         userInfo = "Group: " + groupID + " " + username + "\n";
         userInfoTV.setText(userInfo);
@@ -49,7 +55,22 @@ public class CostInput extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         groupRef = database.getReference(groupID);
         //groupRef.setValue(username);
+        userCostRef = groupRef.child(username);
+        userCostRef.addValueEventListener(new ValueEventListener() {
 
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists())return;
+                //totalCost=0;
+                thisUesrCost =  dataSnapshot.getValue(Integer.class);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
 
     }
 
@@ -66,7 +87,8 @@ public class CostInput extends AppCompatActivity {
         String currentTime = sdf.format(new Date());
         TransInfo newtrans = new TransInfo(currentTime, costInfo, username, Integer.valueOf(costAmount));
         groupRef.child("alltrans").push().setValue(newtrans);
-        groupRef.child("user").child(username).push().setValue(Integer.valueOf(costAmount));
+        thisUesrCost+=Integer.valueOf(costAmount);
+        groupRef.child("user").child(username).setValue(thisUesrCost);
 
         costInfoET.setText("");
         costamountET.setText("");

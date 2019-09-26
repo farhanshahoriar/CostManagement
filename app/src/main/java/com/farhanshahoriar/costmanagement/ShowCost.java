@@ -28,8 +28,9 @@ public class ShowCost extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView costInfoTV;
     private TransListAdapter transListAdapter;
-    ArrayList<TransInfo> transList = null;
-
+    private int totalCost=0;
+    private ArrayList<TransInfo> transList = null;
+    private ArrayList<UserInfo> userInfos = null;
     SharedPreferences sharedPref;
     Context mContext;
     DatabaseReference myRef;
@@ -44,11 +45,11 @@ public class ShowCost extends AppCompatActivity {
         String username = sharedPref.getString("username","false");
         String groupID = sharedPref.getString("groupID","false");
 
-
         transList = new ArrayList<>();
-
+        userInfos = new ArrayList<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference(groupID).child("alltrans");
+        DatabaseReference userRef = database.getReference(groupID).child("user");
         //myRef.keepSynced(true);
         //final DatabaseReference dueRef = database.getReference("shuvoent").child("customers").child(alidx).child("duePayment");
 
@@ -57,10 +58,9 @@ public class ShowCost extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //if(!dataSnapshot.exists())return;
-                int totalCost=0;
+                totalCost=0;
                 transList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
                     TransInfo info = postSnapshot.getValue(TransInfo.class);
                     totalCost+=info.getAmount();
                     transList.add(info);
@@ -70,6 +70,26 @@ public class ShowCost extends AppCompatActivity {
                 costInfoTV.setText("Total Cost: "+totalCost);
                 //dueRef.setValue(totalCost);
                 //dueTextView.setText("মোট বাকিঃ "+totalCost+" টাকা" );
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        userRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    int cost = postSnapshot.getValue(Integer.class);
+                    String uname =postSnapshot.getKey();
+                    costInfoTV.append("\n"+uname+" cost: "+cost+" ");
+                }
+                ///transListAdapter.setData(transList);
+                //costInfoTV.setText("Total Cost: "+totalCost);
             }
 
             @Override

@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("username",username);
         editor.putString("groupID",groupID);
+        editor.putInt("ucost",0);
         editor.apply();
         startActivity(intentCA);
         finish();
