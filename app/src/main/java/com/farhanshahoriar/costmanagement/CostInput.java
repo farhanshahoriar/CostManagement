@@ -54,7 +54,7 @@ public class CostInput extends AppCompatActivity {
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
         groupRef = database.getReference(groupID);
-        //groupRef.setValue(username);
+        groupRef.keepSynced(true);
         userCostRef = groupRef.child(username);
         userCostRef.addValueEventListener(new ValueEventListener() {
 

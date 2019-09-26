@@ -50,8 +50,7 @@ public class ShowCost extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference(groupID).child("alltrans");
         DatabaseReference userRef = database.getReference(groupID).child("user");
-        //myRef.keepSynced(true);
-        //final DatabaseReference dueRef = database.getReference("shuvoent").child("customers").child(alidx).child("duePayment");
+        database.getReference(groupID).keepSynced(true);
 
         myRef.addValueEventListener(new ValueEventListener() {
 
