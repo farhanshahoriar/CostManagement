@@ -42,7 +42,7 @@ public class ShowCost extends AppCompatActivity {
         costInfoTV = findViewById(R.id.tv_cost_info);
         mContext = this.getApplicationContext();
         sharedPref = mContext.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
-        String username = sharedPref.getString("username","false");
+        final String username = sharedPref.getString("username","false");
         String groupID = sharedPref.getString("groupID","false");
 
         transList = new ArrayList<>();
@@ -58,18 +58,14 @@ public class ShowCost extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //if(!dataSnapshot.exists())return;
-                totalCost=0;
                 transList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     TransInfo info = postSnapshot.getValue(TransInfo.class);
-                    totalCost+=info.getAmount();
                     transList.add(info);
-                    //costInfoTV.append("OK");
                 }
+
                 transListAdapter.setData(transList);
-                costInfoTV.setText("Total Cost: "+totalCost);
-                //dueRef.setValue(totalCost);
-                //dueTextView.setText("মোট বাকিঃ "+totalCost+" টাকা" );
+
             }
 
             @Override
@@ -83,13 +79,34 @@ public class ShowCost extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userInfos.clear();
+                totalCost=0;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     int cost = postSnapshot.getValue(Integer.class);
                     String uname =postSnapshot.getKey();
-                    costInfoTV.append("\n"+uname+" cost: "+cost+" ");
+                    totalCost+=cost;
+                    userInfos.add(new UserInfo(uname,cost,0));
+
                 }
                 ///transListAdapter.setData(transList);
-                //costInfoTV.setText("Total Cost: "+totalCost);
+                costInfoTV.setText("Total Cost: "+totalCost+"\n");
+                int numperson = userInfos.size();
+                double avgcost=0;
+                if(numperson>0) avgcost = (double)totalCost/numperson;
+                for(UserInfo cuser : userInfos){
+                    double balance = cuser.pCost-avgcost;
+                    if(balance>=0){
+                        costInfoTV.append("\n"+username+" spend: "+cuser.pCost+", will get: " +balance);
+                    }
+                    else {
+                        balance=-balance;
+                        costInfoTV.append("\n"+username+" spend: "+cuser.pCost +", will give: " +balance);
+                    }
+
+
+                }
+                costInfoTV.append("\n");
+
             }
 
             @Override
