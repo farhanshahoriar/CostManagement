@@ -5,32 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
-
+    tools:context=".CostInput">
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login_guideline"
-        android:padding="10dp"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="20sp"
-        android:visibility="visible"/>
-    <EditText
-        android:id="@+id/et_username"
-        android:hint="Username"
+        android:id="@+id/user_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <EditText
-        android:id="@+id/et_group_id"
-        android:hint="Group ID"
+        android:id="@+id/et_cost_info"
+        android:hint="Cost Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/et_cost_amount"
+        android:hint="Amount of Cost"
+        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Log in"
-        android:onClick="onClickLogin"
+        android:text="Add Cost"
+        android:onClick="onClickAddCost"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Cost Management</string>
+    <string name="login_guideline">Choose your user name and Group ID</string>
+
 </resources>
