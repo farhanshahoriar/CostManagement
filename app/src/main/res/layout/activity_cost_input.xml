@@ -28,5 +28,12 @@
         android:text="Add Cost"
         android:onClick="onClickAddCost"
         android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Show All Cost"
+        android:onClick="onClickShowCost"
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
